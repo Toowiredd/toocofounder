@@ -1,49 +1,55 @@
-A non-ordered roadmap & todo dump
-will update with proper map later, ignore for now
+# Project Roadmap & TODOs
 
----
+> Note: This is a preliminary roadmap, subject to updates and reorganization.
 
-## nearest
-merge with browser-based local dev env using webcontainers ; console.cofounder.openinterface.ai
+## Priority Queue
 
-## validation, errorfix
-post-generation validation swarm modules
-swarm autofix modules, merge
-babel parse
+### Development Environment
+- [ ] Merge with browser-based local dev environment
+- [ ] Set up webcontainers integration
+- [ ] Configure console.cofounder.openinterface.ai
 
-## build, deploy
-vite plugin to generate web app without the cofounder modules
-generate packed projects ready for deployment
-automate deployments, integrate different services
+### Code Quality & Validation
+- [ ] Implement post-generation validation swarm modules
+- [ ] Develop swarm autofix modules
+- [ ] Add Babel parsing support
 
-## design, layouts
-plug in advanced designer + models
-document how to custom design systems
-add & index docs for shiny design systems
-fonts / css modules
-release extensive cofounder index on api access for layout designer to use
-separate {desktop,mobile} in designer
-RAG on icons via {text/clip} (like in openv0), maybe as a vite plugin
+### Build & Deployment
+- [ ] Create Vite plugin for web app generation
+- [ ] Set up project packaging system
+- [ ] Automate deployment pipelines
+- [ ] Integrate deployment services
 
-## functional
-deploy latest index checkpoint in api.cofounder
+### Design System
+- [ ] Implement advanced designer integration
+- [ ] Document custom design system creation
+- [ ] Create design system documentation index
+- [ ] Add fonts/CSS modules
+- [ ] Release API access index for layout designer
+- [ ] Separate desktop/mobile design components
+- [ ] Implement RAG-based icon system
 
-## mgmt
-more iteration modules, sequences to handle full lifecycle of generated projects
-document everything
+### Core Functionality
+- [ ] Deploy latest index checkpoint in api.cofounder
+- [ ] Enhance iteration modules
+- [ ] Document lifecycle management
 
-## platforms
-react-native / flutter
-more frontend frameworks
+### Platform Support
+- [ ] Add React Native support
+- [ ] Add Flutter support
+- [ ] Expand frontend framework compatibility
 
-## project
-technical articles
-model train & serve from api
-admin panel à la coolify
+### Project Development
+- [ ] Write technical documentation
+- [ ] Implement model training pipeline
+- [ ] Create admin panel
 
-## also
-SEO stuff
-analytics into the dev feedback
-animation (ie. framer-motion)
-functional, api, python support api-side
-benchmarks
+### Additional Features
+- [ ] Implement SEO optimizations
+- [ ] Add analytics for dev feedback
+- [ ] Integrate animation support
+- [ ] Add functional/API support
+- [ ] Develop Python support API
+- [ ] Create benchmarking suite non-ordered roadmap & todo dump
+
+
