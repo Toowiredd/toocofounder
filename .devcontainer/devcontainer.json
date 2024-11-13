@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "test": "npx run test",
+    "test": "jest run test",
     "build": "npx @openinterface/cofounder",
     "launch": "npx @openinterface/cofounder && cd cofounder/api && npm run start && cd ../../apps/{YourApp} && npm i && npm run dev"
   }
