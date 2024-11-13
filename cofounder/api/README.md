@@ -1,5 +1,14 @@
 # CoFounder API
 
+## Summary of High-Impact Points
+
+- Ensure you have Node.js (v14 or higher) and npm (v6 or higher) installed.
+- Clone the repository and navigate to the `cofounder/api` directory.
+- Create a `.env` file with the necessary environment variables.
+- Install dependencies by running `npm install`.
+- Start the server by running `npm run start`.
+- Access the dashboard at `http://localhost:4200`.
+
 ## Overview
 
 This API is part of the CoFounder project, which aims to provide a comprehensive platform for project management and AI-assisted development. The API includes various endpoints for managing projects, interacting with AI models, and handling utilities such as transcription.
@@ -52,6 +61,10 @@ npm run start
 
 The server will be running on `http://localhost:4200`.
 
+### Accessing the Dashboard
+
+To access the dashboard, open your web browser and navigate to `http://localhost:4200`.
+
 ## API Endpoints
 
 ### General
@@ -94,6 +107,23 @@ The server will be running on `http://localhost:4200`.
       "stream": false
     }
     ```
+
+## Troubleshooting Tips
+
+### Common Issues
+
+1. **Server not starting**:
+   - Ensure all dependencies are installed by running `npm install`.
+   - Check the `.env` file for missing or incorrect environment variables.
+   - Verify that the required ports are not in use by other applications.
+
+2. **Dashboard not accessible**:
+   - Ensure the server is running by checking the terminal output for any errors.
+   - Verify that you are navigating to the correct URL: `http://localhost:4200`.
+
+3. **API requests failing**:
+   - Check the server logs for any error messages.
+   - Ensure the API endpoints are correctly specified in your requests.
 
 ## Testing
 
