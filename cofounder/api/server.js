@@ -190,7 +190,7 @@ app.post("/api/utils/transcribe", async (req, res) => {
 		// Write the audio buffer to the temporary path
 		fs.writeFileSync(tempFilePath, audioBuffer);
 
-		const { transcript } = await utils.localai.transcribe({ path: tempFilePath });
+		const { transcript } = await utils.openai.transcribe({ path: tempFilePath });
 		res.status(200).json({ transcript });
 	} catch (error) {
 		console.error("Transcription error:", error);
@@ -331,23 +331,6 @@ app.post("/api/project/actions", async (req, res) => {
 		res.status(500).json({ error: "failed to process" });
 	}
 });
-
-// New route to handle requests to the locally hosted AI model
-app.post("/api/locallai/inference", async (req, res) => {
-	const { model, messages, stream } = req.body;
-
-	try {
-		const response = await utils.localai.inference({
-			model,
-			messages,
-			stream,
-		});
-		res.status(200).json(response);
-	} catch (error) {
-		console.error("Local AI inference error:", error);
-		res.status(500).json({ error: "Failed to perform local AI inference" });
-	}
-});
 // ----------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------- SOCKET IO SETUP ------------------------
@@ -409,7 +392,7 @@ const streams = {
 				Object.keys(projectSubState.webapp[_type]).map((_category) => {
 					// _category : root || store || views
 					Object.keys(projectSubState.webapp[_type][_category]).map((_id) => {
-							// _id : app || redux || GV_Whatever || ...
+						// _id : app || redux || GV_Whatever || ...
 						mergedKey = `webapp.${_type}.${_category}.${_id}`;
 						new_update_data[mergedKey] = {};
 						Object.keys(projectSubState.webapp[_type][_category][_id]).map(
