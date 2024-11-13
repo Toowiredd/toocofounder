@@ -61,9 +61,7 @@ async function opLlmGen({ context, data }) {
 		? utils.openai.inference
 		: process.env.LLM_PROVIDER.toLowerCase() === "openai"
 			? utils.openai.inference
-			: process.env.LLM_PROVIDER.toLowerCase() === "localai"
-				? utils.localai.inference
-				: utils.anthropic.inference;
+			: utils.anthropic.inference;
 
 	const { text, usage } = await llm_fn({
 		model: model,
