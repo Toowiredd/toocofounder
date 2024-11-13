@@ -6,8 +6,7 @@
 	"scripts": {
 		"start:npx": "npm i && nodemon --loader esm-module-alias/loader --no-warnings server.js",
 		"start": "nodemon --loader esm-module-alias/loader --no-warnings server.js",
-		"test": "jest",
-		"run-server": "npm run start"
+		"test": "jest"
 	},
 	"nodemonConfig": {
 		"ignore": [
