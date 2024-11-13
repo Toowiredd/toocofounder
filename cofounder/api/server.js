@@ -409,7 +409,7 @@ const streams = {
 				Object.keys(projectSubState.webapp[_type]).map((_category) => {
 					// _category : root || store || views
 					Object.keys(projectSubState.webapp[_type][_category]).map((_id) => {
-						// _id : app || redux || GV_Whatever || ...
+							// _id : app || redux || GV_Whatever || ...
 						mergedKey = `webapp.${_type}.${_category}.${_id}`;
 						new_update_data[mergedKey] = {};
 						Object.keys(projectSubState.webapp[_type][_category][_id]).map(
