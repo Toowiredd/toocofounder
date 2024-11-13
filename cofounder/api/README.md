@@ -102,7 +102,7 @@ To access the dashboard, open your web browser and navigate to `http://localhost
       "model": "local-model",
       "messages": [
         { "role": "system", "content": "You are a helpful assistant." },
-        { "role": "user", "content": "Hello, how can I assist you today?" }
+        { "role": "user", "content: "Hello, how can I assist you today?" }
       ],
       "stream": false
     }
