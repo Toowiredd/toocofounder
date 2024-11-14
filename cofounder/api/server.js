@@ -14,7 +14,11 @@ import open, { openApp, apps } from "open";
 import cofounder from "./build.js";
 dotenv.config();
 
-// -------------------------------------------------------------- HELPERS  ------------------------
+/**
+ * Helper function to slugify a given text.
+ * @param {string} text - The text to be slugified.
+ * @returns {string} - The slugified text.
+ */
 function _slugify(text) {
 	return text
 		.toString()
@@ -25,26 +29,11 @@ function _slugify(text) {
 		.replace(/^-+/, "") // Trim - from start
 		.replace(/-+$/, ""); // Trim - from end
 }
-// ----------------------------------------------------------------------------------------------------
 
-// -------------------------------------------------------------- ARGS CASE ------------------------
-// init project from argv
-// to be called like : npm run start -- -p "some-project-name" -d "app description"
-const timestamp = Date.now();
-const argv = yargs(hideBin(process.argv)).argv;
-const new_project = {
-	project:
-		(!argv.p && !argv.project) ||
-		!_slugify(argv.p || argv.project).length ||
-		!_slugify(argv.p || argv.project).match(/[a-z0-9]/)
-			? `project-${timestamp}`
-			: _slugify(argv.p || argv.project),
-	description: argv.description || argv.d || argv.desc || false,
-	aesthetics: argv.aesthetics || argv.a || argv.aesthetic || false,
-};
-if (argv.file || argv.f) {
-	new_project.description = fs.readFileSync(argv.file || argv.f, "utf-8");
-}
+/**
+ * Function to create a new project based on command line arguments.
+ * It initializes the project with the provided description and aesthetics.
+ */
 async function create_new_project() {
 	if (!new_project.description.length) {
 		console.error(
@@ -77,30 +66,6 @@ async function create_new_project() {
 	};
 	console.dir({ query }, { depth: null });
 
-	/*
-	// debug : to resume ----------------------------------------------------------
-	const data = await cofounder.system.run({
-		id: "op:PROJECT::STATE:LOAD",
-		context: {
-			...context,
-			project: new_project.project,
-		},
-		data: {},
-	});
-	await cofounder.system.run({
-		id: `seq:project:init:v1:resume`,
-		context: {
-			...context,
-			project: new_project.project,
-		},
-		data: merge(data, {
-			...query,
-			debug: {},
-		}),
-	});
-	----------------------------------------------------------
-	*/
-
 	await cofounder.system.run({
 		id: `seq:project:init:v1`,
 		context: {
@@ -110,13 +75,12 @@ async function create_new_project() {
 		data: query,
 	});
 }
+
 // Call create_new_project if command args for init project are provided
 if (new_project.project && new_project.description) {
 	create_new_project();
 }
-// ----------------------------------------------------------------------------------------------------
 
-// -------------------------------------------------------------- SERVER SETUP ------------------------
 const app = express();
 const PORT = process.env.PORT || 4200;
 
@@ -140,12 +104,20 @@ const server = app.listen(PORT, () => {
 	open(`http://localhost:${PORT}/`);
 });
 
-// -------------------------------------------------------- SERVER REST API PATHS ------------------------
-
+/**
+ * Endpoint to check server status.
+ * @route GET /api/ping
+ * @returns {Object} - A message indicating the server is running.
+ */
 app.get("/api/ping", (req, res) => {
 	res.status(200).json({ message: "pong" });
 });
 
+/**
+ * Endpoint to list all projects.
+ * @route GET /api/projects/list
+ * @returns {Object} - A list of projects with their details.
+ */
 app.get("/api/projects/list", (req, res) => {
 	fs.readdir("./db/projects", (err, files) => {
 		if (err) {
@@ -172,6 +144,13 @@ app.get("/api/projects/list", (req, res) => {
 	});
 });
 
+/**
+ * Endpoint to transcribe audio to text.
+ * @route POST /api/utils/transcribe
+ * @param {Object} req - The request object containing the audio data.
+ * @param {Object} res - The response object to send the transcript.
+ * @returns {Object} - The transcribed text.
+ */
 app.post("/api/utils/transcribe", async (req, res) => {
 	const uid = Math.random().toString(36).slice(2, 11); // Generate a random unique ID
 	const tempFilePath = path.join(__dirname, "db/storage/temp", `${uid}.webm`);
@@ -203,6 +182,13 @@ app.post("/api/utils/transcribe", async (req, res) => {
 	}
 });
 
+/**
+ * Endpoint to create a new project.
+ * @route POST /api/projects/new
+ * @param {Object} req - The request object containing the project details.
+ * @param {Object} res - The response object to send the project ID.
+ * @returns {Object} - The created project ID.
+ */
 app.post("/api/projects/new", async (req, res) => {
 	const request = req.body;
 	/*
@@ -255,6 +241,13 @@ app.post("/api/projects/new", async (req, res) => {
 	res.status(200).json({ project: new_project_query.project });
 });
 
+/**
+ * Endpoint to resume a project.
+ * @route POST /api/project/resume
+ * @param {Object} req - The request object containing the project ID.
+ * @param {Object} res - The response object to send the project ID.
+ * @returns {Object} - The resumed project ID.
+ */
 app.post("/api/project/resume", async (req, res) => {
 	const { project } = req.body;
 	const resume_response = await resume_project({ project });
@@ -283,13 +276,15 @@ const actions = {
 	},
 	"regenerate:ui": { fn: _regenerateUiComponent, load: true },
 	"iterate:ui": { fn: _iterateUiComponent, load: true },
-	/*
-		later, single universal interface approach, 
-		> should go through an analysis sequence ;
-				ie. is is a new feature that needs db schemas & apis to be altered, or just at the layout level, etc
-	*/
 };
-const actionsKeys = Object.keys(actions);
+
+/**
+ * Endpoint to handle various project actions.
+ * @route POST /api/project/actions
+ * @param {Object} req - The request object containing the action details.
+ * @param {Object} res - The response object to send the action result.
+ * @returns {Object} - The result of the action.
+ */
 app.post("/api/project/actions", async (req, res) => {
 	/*
 		in : {
@@ -331,10 +326,7 @@ app.post("/api/project/actions", async (req, res) => {
 		res.status(500).json({ error: "failed to process" });
 	}
 });
-// ----------------------------------------------------------------------------------------------------
 
-// -------------------------------------------------------------- SOCKET IO SETUP ------------------------
-// socket.io instance attached to express
 const io = new Server(server, {
 	cors: {
 		origin: "*",
@@ -433,106 +425,6 @@ io.on("connection", async (socket) => {
 		} catch (e) {
 			console.error("> cofounder/api : server error : ", e);
 		}
-
-		/*
-			console.log("> ____debug : server : op:LLM::DEBUG : run");
-			const inference_debug = await cofounder.system.run({
-				id: "op:LLM::DEBUG:SIMULATE",
-				context: {
-					...context, // {streams}
-					project,
-					operation: {
-						key: "pm.prd",
-						meta: {
-							name: "PRD",
-							desc: "project requirements doc",
-						},
-					},
-				},
-				data: {}, // subscriptions[project]
-			});
-			const prd = inference_debug.generated;
-			await cofounder.system.run({
-				id: "op:PROJECT::STATE:UPDATE",
-				context: {
-					...context,
-					project,
-				},
-				data: {
-					operation: {
-						id: "pm:prd",
-					},
-					type: `end`,
-					content: {
-						key: "pm.prd",
-						data: prd,
-					},
-				},
-			});
-			const debug_webapp_data = yaml.parse(
-				fs.readFileSync(
-					`db/projects/foundermatchdevclone/state/webapp/code/react/views/GV_TopNav/versions/1726434529344.yaml`,
-					"utf8",
-				),
-			);
-			debug_webapp_data.data.tsx = `it be cool if this updated fr`;
-			await cofounder.system.run({
-				id: "op:PROJECT::STATE:UPDATE",
-				context: {
-					...context,
-					project,
-				},
-				data: {
-					operation: {
-						id: `webapp:react:views`,
-						refs: {
-							id: "GV_TopNav",
-							version: "1726434529344",
-						},
-					},
-					type: `end`,
-					content: {
-						key: debug_webapp_data.key,
-						data: debug_webapp_data.data,
-					},
-				},
-			});
-			console.log("> ____debug : server : op:LLM::DEBUG:2");
-			const demo_messages = [
-				{
-					role: "system",
-					content:
-						"You are a helpful assistant that provides information about product requirements. in markdown format;",
-				},
-				{
-					role: "user",
-					content:
-						"Can you help me outline the product requirements for our new project? It's a rizz helper",
-				},
-			];
-
-			
-			await cofounder.system.run({
-				id: "op:LLM::GEN",
-				context: {
-					...context, // {streams}
-					project,
-					operation: {
-						key: 'pm.prd',
-						meta: {
-							name: "PRD",
-							desc: "product requirements document",
-						},
-					},
-				},
-				data: {
-					model: `gpt-4o-mini`, //`gpt-4o`,
-					messages: demo_messages,
-					preparser: `backticks`,
-					parser: false,
-				},
-			})
-		*/
 	});
 	socket.on("disconnect", () => {
 		console.log("> user disconnected : ", socket.id);
@@ -543,6 +435,12 @@ io.on("connection", async (socket) => {
 		}
 	});
 });
+
+/**
+ * Function to load a project from the local storage.
+ * @param {Object} param0 - The project details.
+ * @returns {Object} - The loaded project state.
+ */
 const load_project = async ({ project }) => {
 	console.log("> load_project : start : ", project);
 	const fetchedProject = await utils.load.local({
@@ -605,6 +503,11 @@ const seq_projectv1_dag = [
 	["webapp.react.app.views"], // views , latest
 ];
 
+/**
+ * Function to resume a project based on its current state.
+ * @param {Object} param0 - The project details.
+ * @returns {Object} - The data and resume point for the project.
+ */
 async function resume_project({ project }) {
 	const project_data = await load_project({ project });
 	const project_keys = Object.keys(projects[project]);
@@ -627,27 +530,10 @@ async function resume_project({ project }) {
 	};
 }
 
-// example of how to stream to client (needs 3 steps)
-const stream_to_client = async ({ project, key, meta }) => {
-	// if (!subscriptions[project]?.length) return;
-	console.log(`> starting stream for project ${project}`);
-	streams.start({ project, key, meta });
-	const chunkSize = 20; // Define the size of each chunk
-	let currentIndex = 0;
-	const interval = setInterval(() => {
-		const timestamp = Date.now();
-		const data = texts[key].slice(currentIndex, currentIndex + chunkSize); // send chunk by chunk
-		streams.write({ project, key, data });
-		currentIndex += chunkSize; // Move to the next chunk
-		if (currentIndex >= texts[key].length) {
-			clearInterval(interval);
-			streams.end({ project, key });
-		}
-	}, 100);
-};
-// ----------------------------------------------------------------------------------------------------
-
-// -------------------------------------------------------- SERVER REST API FUNCTION CALLS ------------------------
+/**
+ * Function to update project preferences.
+ * @param {Object} param0 - The request and data details.
+ */
 async function _updateProjectPreferences({ request }) {
 	/*
 		in : {
@@ -678,6 +564,11 @@ async function _updateProjectPreferences({ request }) {
 		},
 	});
 }
+
+/**
+ * Function to regenerate a UI component.
+ * @param {Object} param0 - The request and data details.
+ */
 async function _regenerateUiComponent({ request, data }) {
 	const { project, query } = request;
 	/*
@@ -734,6 +625,11 @@ async function _regenerateUiComponent({ request, data }) {
 		},
 	});
 }
+
+/**
+ * Function to iterate a UI component.
+ * @param {Object} param0 - The request and data details.
+ */
 async function _iterateUiComponent({ request, data }) {
 	console.dir({ "cofounder:api:server:iterate:ui": "starts" });
 	/*
@@ -796,4 +692,3 @@ async function _iterateUiComponent({ request, data }) {
 		},
 	});
 }
-// ----------------------------------------------------------------------------------------------------
