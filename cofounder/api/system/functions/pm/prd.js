@@ -1,5 +1,12 @@
 import utils from "@/utils/index.js";
 
+/**
+ * Analyzes the provided project details and generates a comprehensive Product Requirements Document (PRD).
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details.
+ * @returns {Object} - The generated PRD.
+ */
 async function pmPrdAnalysis({ context, data }) {
 	/* ;; PM:PRD::ANALYSIS
 		make userprovided details -> PRD analysis ; user can have text + {pdf , images} (now just text), later extend

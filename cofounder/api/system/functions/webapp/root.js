@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Generates a prompt for the root React component (App.tsx) based on the provided task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the uxsitemap, uxdatamap, and webapp.
+ * @returns {Array} - The generated prompt messages.
+ */
 async function promptRoot({ context, data }) {
 	// have a placeholder redux store module in case it'd wrap with non implemented store
 	/*
@@ -187,6 +194,13 @@ you are a genius + you get $9999`,
 	];
 }
 
+/**
+ * Generates the root React component (App.tsx) based on the provided task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the uxsitemap, uxdatamap, and webapp.
+ * @returns {Object} - The generated root component and its metadata.
+ */
 async function webappRootGenerate({ context, data }) {
 	const timestamp = `${Date.now()}`;
 

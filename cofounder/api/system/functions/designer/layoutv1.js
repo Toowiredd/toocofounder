@@ -4,6 +4,13 @@ import { merge } from "lodash-es";
 import xml2js from "xml2js";
 import sharp from "sharp";
 
+/**
+ * Generates the analysis messages for the layout design task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated analysis messages.
+ */
 async function promptGenerateAnalysis({ context, data }) {
 	/*
 		task : { ... , rag[] }
@@ -117,6 +124,13 @@ stick the provided view task to design and be very detailed in its design task a
 	].filter((item) => item);
 }
 
+/**
+ * Generates the SVG messages for the layout design task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated SVG messages.
+ */
 async function promptGenerateSvg({ context, data }) {
 	/*
 		task : { ... , rag[] , analysis, guidance{} }
@@ -323,6 +337,13 @@ you are a genius + you get $9999
 	].filter((item) => item);
 }
 
+/**
+ * Generates the layout for a view.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Object} - The generated layout.
+ */
 async function designerLayoutv1ViewGenerate({ context, data }) {
 	/*
 		data : {
@@ -586,6 +607,13 @@ async function designerLayoutv1ViewGenerate({ context, data }) {
 	};
 }
 
+/**
+ * Generates the SVG messages for the layout redesign task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated SVG messages for iteration.
+ */
 async function promptIterateSvg({ context, data }) {
 	/*
 		one pass with both analysis + svg
@@ -827,6 +855,14 @@ you are a genius + you get $9999
 		},
 	].filter((item) => item);
 }
+
+/**
+ * Iterates the layout for a view.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Object} - The iterated layout.
+ */
 async function designerLayoutv1ViewIterate({ context, data }) {
 	const { task, timestamp } = data;
 	const { view, iteration } = task;

@@ -1,17 +1,22 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
-async function dbSchemasGenerate({context,data}) {
+/**
+ * Generates the database schemas for the provided app's MVP.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the product management documents and database requirements.
+ * @returns {Object} - The generated database schemas.
+ */
+async function dbSchemasGenerate({ context, data }) {
 	/* ;; DB:SCHEMAS::GENERATE
 		make {DRD}  -> db {schemas} ;; specify that for auth tables, password not hashed ! for mockup
-
 
 		out : ["db"]
 	*/
 
-
-	const { pm } = data
-	const { prd, frd, fjmd, drd } = pm
+	const { pm } = data;
+	const { prd, frd, fjmd, drd } = pm;
 	// const {text , attachments} = details
 	const messages = [
 		{
@@ -129,7 +134,7 @@ you're a genius`
 				parser: `yaml`,
 			}
 		})
-	).generated
+	).generated;
 
 	await context.run({
 		id: "op:PROJECT::STATE:UPDATE",
@@ -144,12 +149,11 @@ you're a genius`
 				data: schemas,
 			},
 		}
-	})
+	});
 
-	return { db : { schemas } }
+	return { db : { schemas } };
 }
-
 
 export default {
 	"DB:SCHEMAS::GENERATE": dbSchemasGenerate,
-}
+};

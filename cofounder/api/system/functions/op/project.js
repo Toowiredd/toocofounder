@@ -107,12 +107,24 @@ const config = {
 	],
 };
 
+/**
+ * Runs the `npm install` command in the specified directory.
+ * 
+ * @param {string} dependenciesRootPath - The path to the directory where `npm install` should be run.
+ */
 async function run_npm_i(dependenciesRootPath) {
 	exec(`npm i`, {
 		stdio: "inherit",
 		cwd: dependenciesRootPath, // folder where package.json is
 	});
 }
+
+/**
+ * Exports the project state to the specified paths based on the operation ID.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the operation ID, content, and other details.
+ */
 async function _exportOnSave({ context, data }) {
 	if (
 		!(
@@ -547,6 +559,12 @@ export default {{ID}};
 	);
 }
 
+/**
+ * Updates the project state based on the provided data.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the operation ID, type, content, and other details.
+ */
 async function opProjectStateUpdate({ context, data }) {
 	// save, modular
 	/*
@@ -684,6 +702,13 @@ async function opProjectStateUpdate({ context, data }) {
 		await _exportOnSave({ context, data });
 }
 
+/**
+ * Loads the project state from local or cloud storage.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details.
+ * @returns {Object} - The loaded project state.
+ */
 async function opProjectStateLoad({ context, data }) {
 	// should have local || cloud strategies
 	const { project } = context;
@@ -706,6 +731,12 @@ async function opProjectStateLoad({ context, data }) {
 	return {};
 }
 
+/**
+ * Exports the project state to a specified format.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details.
+ */
 async function opProjectStateExport({ context, data }) {
 	// tons to update , just disregard this for now
 
@@ -713,6 +744,12 @@ async function opProjectStateExport({ context, data }) {
 	// force export full project ; from {data}
 }
 
+/**
+ * Sets up the project state by copying boilerplate files to the project directory.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details.
+ */
 async function opProjectStateSetup({ context, data }) {
 	// if local export enabled, duplicate boilerplate
 	const { project } = context;
@@ -762,6 +799,12 @@ async function opProjectStateSetup({ context, data }) {
 	);
 }
 
+/**
+ * Saves the current state of the project.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details.
+ */
 async function opProjectStateSave({ context, data }) {
 	// save, full current state of project
 }

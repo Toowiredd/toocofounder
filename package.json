@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "localai": "^1.0.0"
+    "localai": "^1.0.1"
   },
   "devDependencies": {
     "jest": "^27.0.0"

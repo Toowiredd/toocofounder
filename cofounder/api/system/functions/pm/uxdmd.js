@@ -1,10 +1,16 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Analyzes the provided project details, PRD, FRD, DRD, and other documents to generate a comprehensive UX Data Map Document (UXDMD).
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details, PRD, FRD, DRD, UX sitemap, and backend requirements.
+ * @returns {Object} - The generated UXDMD.
+ */
 async function pmUxdmdAnalysis({ context, data }) {
 	/* ;; PM:UXDMD::ANALYSIS
 		{pm docs , db , openapi? , uxsitemap {analysis,struct,...}?} -> (<> crossanalysis) to make UX Datamap Doc
-
 	*/
 
 	const { pm, db, backend } = data;

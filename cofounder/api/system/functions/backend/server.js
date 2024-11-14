@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Generates the backend server code based on the provided specifications and details.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing specifications and details for the backend server.
+ * @returns {Object} - The generated backend server code and related details.
+ */
 async function backendServerGenerate({ context, data }) {
 	/*
     base on dev:test oneshot function
@@ -94,7 +101,7 @@ everything needs to be implemented and working, no placeholders, no hallucinated
   for any db requirements, use postgres ; you can only use postgres (from @electric-sql/pglite ) with raw queries (no ORMs or anything)
 
 - if auth needed, use jwt middleware
-	important : if auth , make sure you return token both on signup and login (even if openapi might have skipped that detail ! else stuff might break ! )
+	important : if auth , make sure you return token both on signup and login (even if openAPI might have skipped that detail ! else stuff might break ! )
 
 - use morgan middleware to log any incoming request and details (ie. method, path, headers, params, query, body) - just for better dev exp
 

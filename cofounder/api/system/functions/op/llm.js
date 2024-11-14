@@ -2,6 +2,13 @@ import utils from "@/utils/index.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+/**
+ * Generates a response from a language model based on the provided input data.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the model, messages, preparser, parser, and other parameters.
+ * @returns {Object} - The generated response and usage details.
+ */
 async function opLlmGen({ context, data }) {
 	/* ;; op:LLM::GEN
 		{model,messages,preparser,parser,...} -> { response , tokens (consumption) }
@@ -97,6 +104,13 @@ async function opLlmGen({ context, data }) {
 	};
 }
 
+/**
+ * Splits an array into smaller chunks of a specified size.
+ * 
+ * @param {Array} array - The array to be split into chunks.
+ * @param {number} chunkSize - The size of each chunk.
+ * @returns {Array} - An array of chunks.
+ */
 function chunkify(array, chunkSize) {
 	const chunks = [];
 	for (let i = 0; i < array.length; i += chunkSize) {
@@ -105,6 +119,13 @@ function chunkify(array, chunkSize) {
 	return chunks;
 }
 
+/**
+ * Vectorizes a chunk of texts using the OpenAI API.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the texts to be vectorized.
+ * @returns {Object} - The vectorized texts and usage details.
+ */
 async function opLlmVectorizeChunk({ context, data }) {
 	/* ;; op:LLM::VECTORIZE:CHUNK
 		{texts} -> {vectors,usage}
@@ -116,6 +137,14 @@ async function opLlmVectorizeChunk({ context, data }) {
 		texts,
 	});
 }
+
+/**
+ * Vectorizes a list of texts by splitting them into chunks and processing each chunk.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the texts to be vectorized.
+ * @returns {Object} - The vectorized texts and usage details.
+ */
 async function opLlmVectorize({ context, data }) {
 	/* ;; op:LLM::VECTORIZE
 		{texts} -> {vectors,usage}
@@ -145,6 +174,13 @@ async function opLlmVectorize({ context, data }) {
 	};
 }
 
+/**
+ * Simulates a stream of text data for debugging purposes.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the simulation parameters.
+ * @returns {Object} - The simulated text data and usage details.
+ */
 async function opLlmDebugSimulate({ context, data }) {
 	/*
 		debug : simulate a stream
@@ -207,6 +243,7 @@ Deleuze's philosophy encourages us to think beyond binary oppositions and embrac
 		usage: {},
 	};
 }
+
 export default {
 	"op:LLM::GEN": opLlmGen,
 	"op:LLM::VECTORIZE": opLlmVectorize,
