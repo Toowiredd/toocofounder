@@ -10,10 +10,7 @@ import { promisify } from "util";
 import { readdir } from "fs";
 import delay from "delay";
 
-const functionsDir = `./system/functions`;
-const unitsDir = `./system/structure`;
-const LOGS_ENABLED = true;
-
+// The build function initializes the system by setting up nodes, functions, sequences, and event handlers.
 async function build({ system }) {
 	console.dir({ build: system.functions });
 
@@ -48,12 +45,13 @@ async function build({ system }) {
 		});
 	}
 
+	// The system.run function executes a node by its ID with the given context and data.
 	system.run = async ({ id, context, data }) => {
-		// console.dir({ __debug__system__run : { input : { id, context, data }, system_nodes: system.nodes, } })
 		try {
 			return await system.nodes[id].run({ context, data });
 		} catch (err) {
 			console.dir({ SYSTEM_RUN_ERR: { err, id } });
+			throw err; // Re-throw the error to ensure it's not silently ignored
 		}
 	};
 
@@ -64,6 +62,7 @@ async function build({ system }) {
 		await system.run({ id, context, data });
 	});
 
+	// Initialize nodes with their respective functions and set up queues for concurrency control.
 	system.nodes = fromPairs(
 		await Promise.all(
 			Object.keys(system.functions)
@@ -76,7 +75,7 @@ async function build({ system }) {
 						interval: parseInt(system.nodes[id].queue?.interval?.time) || 0,
 						timeout: parseInt(system.nodes[id].queue?.timeout) || undefined,
 					});
-					// this is the function to be ran
+					// This is the function to be run for each node.
 					const fn = async ({ context = {}, data = {} }) => {
 						events.log.node.emit(`enqueue`, { id, context, data });
 						return await queues[id].add(async () => {
@@ -127,43 +126,8 @@ async function build({ system }) {
 				}),
 		),
 	);
-	/*
-    make the DAG graph decomposition parallelizor from the system and relations
-    handle : seq , parallel , recursion too !
-  */
-	/*
-    event registration for system triggers (nodes are all registered for events node:{id} )
-  */
 
-	if (LOGS_ENABLED) {
-		events.log.sequence.on(`sequence:start`, ({ id, context, data }) => {
-			console.log(
-				`\x1b[34mlog:start:  sequence:${id}\t${JSON.stringify({ context, data }).slice(0, 150)}\x1b[0m`,
-			);
-		});
-		events.log.sequence.on(
-			`sequence:step:start`,
-			({ id, index, over, context, data }) => {
-				console.log(
-					`\x1b[34mlog:start:  sequence:${id}:step:${index}/${over - 1}\t${JSON.stringify({ context, data }).slice(0, 150)}\x1b[0m`,
-				);
-			},
-		);
-		events.log.sequence.on(
-			`sequence:step:end`,
-			({ id, index, over, context, data }) => {
-				console.log(
-					`\x1b[35mlog:done:   sequence:${id}:step:${index}/${over - 1}\t${JSON.stringify({ context, data }).slice(0, 150)}\x1b[0m`,
-				);
-			},
-		);
-		events.log.sequence.on(`sequence:end`, ({ id, context, data }) => {
-			console.log(
-				`\x1b[35mlog:done:   sequence:${id}\t${JSON.stringify({ context, data }).slice(0, 150)}\x1b[0m`,
-			);
-		});
-	}
-
+	// Function to create Directed Acyclic Graphs (DAGs) for sequences.
 	async function makeDags() {
 		// need to implement recursion cases next !
 		return fromPairs(
@@ -221,7 +185,7 @@ async function build({ system }) {
 					throw new Error("The provided DAG has cycles or unresolved dependencies");
 				}
 
-				// later ; update for logging etc
+				// Function to run a sequence of nodes based on the DAG.
 				const run = async ({ context, data }) => {
 					events.log.sequence.emit(`sequence:start`, {
 						id: sequenceId,
@@ -316,7 +280,10 @@ async function build({ system }) {
 	return system;
 }
 
+// Promisify readdir to use async/await.
 const readdirAsync = promisify(readdir);
+
+// Function to get all files recursively with a specific extension.
 async function getFilesRecursively(dir, ext) {
 	let results = [];
 	const list = await readdirAsync(dir, { withFileTypes: true });
@@ -330,6 +297,8 @@ async function getFilesRecursively(dir, ext) {
 	}
 	return results;
 }
+
+// Build the system by loading functions and units from the specified directories.
 const system = await build({
 	system: {
 		functions: merge(

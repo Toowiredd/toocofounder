@@ -3,6 +3,13 @@ import yaml from "yaml";
 import fs from "fs";
 import { merge, sample } from "lodash-es";
 
+/**
+ * Generates multiple webapp views based on the provided uxsitemap structure.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the uxsitemap structure.
+ * @returns {Object} - The generated webapp views.
+ */
 async function webappViewGenerateMulti({ context, data }) {
 	/* get all view from uxsitemap , start gen */
 	const { views } = data.uxsitemap.structure;
@@ -61,6 +68,13 @@ async function webappViewGenerateMulti({ context, data }) {
 	return response;
 }
 
+/**
+ * Generates a prompt for the functional view component based on the provided task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated prompt messages.
+ */
 async function promptViewFunctional({ context, data }) {
 	const { pm, backend, uxsitemap, uxdatamap, webapp, task } = data;
 	const { prd, frd, uxdmd } = pm;
@@ -255,6 +269,13 @@ you are a genius + you get $9999`,
 	].filter((e) => e);
 }
 
+/**
+ * Generates a prompt for the redesign of a view component based on the provided design task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated prompt messages.
+ */
 async function promptViewRedesign({ context, data }) {
 	/*
     data : {
@@ -458,6 +479,13 @@ you get $9999`,
 	].filter((e) => e);
 }
 
+/**
+ * Generates a webapp view component based on the provided task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Object} - The generated webapp view component.
+ */
 async function webappViewGenerate({ context, data }) {
 	/*
     data : {
@@ -789,6 +817,13 @@ async function webappViewGenerate({ context, data }) {
 	return { webapp: data.webapp };
 }
 
+/**
+ * Generates a prompt for iterating on a view component without a designer.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated prompt messages.
+ */
 async function promptIterateNoDesigner({ context, data }) {
 	/*
 		prompt with :
@@ -960,6 +995,13 @@ you get $9999`,
 	].filter((e) => e);
 }
 
+/**
+ * Generates a prompt for iterating on a view component with a designer.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Array} - The generated prompt messages.
+ */
 async function promptIterateWithDesigner({ context, data }) {
 	/*
 		prompt with :
@@ -1202,7 +1244,13 @@ you get $9999`,
 	].filter((e) => e);
 }
 
-//async function webappViewRedesign({ context, data }) {}
+/**
+ * Iterates on a webapp view component based on the provided task.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details.
+ * @returns {Object} - The iterated webapp view component.
+ */
 async function webappViewIterate({ context, data }) {
 	const timestamp = `${Date.now()}`;
 

@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Generates the structure of the UX sitemap for the app, including unique views, global shared views, and cross-links.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the product management documents.
+ * @returns {Object} - The generated UX sitemap structure.
+ */
 async function uxSitemapStructure({ context, data }) {
 	/* generate uxsitemap in strict format */
 
@@ -152,6 +159,13 @@ You're a genius do a great job`,
 
 // ____________________________________________________________________________________________________
 
+/**
+ * Processes the views for the UX sitemap, distributing the processing to submodules for refinement.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the product management documents, database schemas, and UX sitemap structure.
+ * @returns {Object} - The processed UX sitemap with views.
+ */
 async function uxSitemapViews({ context, data }) {
 	/* ;; UX:SITEMAP::VIEWS
 		{pm docs , db , openapi?, UXSMD, uxsitemap{structure} } -> uxsitemap{...,views}
@@ -171,6 +185,13 @@ async function uxSitemapViews({ context, data }) {
 
 // ____________________________________________________________________________________________________
 
+/**
+ * Processes a chunk of normal views for the UX sitemap.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the views to be processed.
+ * @returns {Object} - The processed views.
+ */
 async function uxSitemapViewsNormal({ context, data }) {
 	/* ;; UX:SITEMAP::VIEWS:NORMAL
 	chunk processing from UX:SITEMAP::VIEWS ; for normal views
@@ -192,6 +213,14 @@ async function uxSitemapViewsNormal({ context, data }) {
 
 	return {};
 }
+
+/**
+ * Processes a chunk of specialized views for the UX sitemap, such as landing pages with high conversion processes.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the specialized views to be processed.
+ * @returns {Object} - The processed specialized views.
+ */
 async function uxSitemapViewsSpecial({ context, data }) {
 	/* ;; UX:SITEMAP::VIEWS:SPECIAL
 		chunk processing from UX:SITEMAP::VIEWS; specialized processors for special sections ; ie. landing would be based on some highconversion process etc;
@@ -214,6 +243,14 @@ async function uxSitemapViewsSpecial({ context, data }) {
 
 	return {};
 }
+
+/**
+ * Processes a chunk of shared views for the UX sitemap.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the shared views to be processed.
+ * @returns {Object} - The processed shared views.
+ */
 async function uxSitemapViewsShared({ context, data }) {
 	/* ;; UX:SITEMAP::VIEWS:SHARED
 		chunk processing from UX:SITEMAP::VIEWS ; for shared views implementations

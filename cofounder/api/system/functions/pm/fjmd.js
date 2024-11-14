@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Analyzes the provided project details, PRD, and FRD to generate a comprehensive Feature Journeys Maps Document (FJMD).
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the project details, PRD, and FRD.
+ * @returns {Object} - The generated FJMD.
+ */
 async function pmFjmdAnalysis({ context, data }) {
 	/* ;; PM:FJMD::ANALYSIS
 		make {userdetails,prd,frd} -> FJMD analysis

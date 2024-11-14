@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Generates a prompt for analyzing functions that may require the use of external APIs.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details including code, decorators, and APIs.
+ * @returns {Array} - The generated prompt messages for analysis.
+ */
 async function promptAnalysis({ context, data }) {
 	const { task } = data;
 	const { code, decorators, apis } = task;
@@ -60,6 +67,13 @@ you are a genius`,
 	];
 }
 
+/**
+ * Generates a prompt for implementing and merging the provided functions into the existing code.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details including code, APIs, and analysis.
+ * @returns {Array} - The generated prompt messages for implementation and merging.
+ */
 async function promptImplementMerge({ context, data }) {
 	const { pm, db, backend, task } = data;
 	const { prd, frd, drd, brd } = pm;
@@ -259,6 +273,14 @@ now do the analysis , write the full working script and specify the dependencies
 		},
 	].filter((e) => e);
 }
+
+/**
+ * Generates a prompt for reviewing the implementation of the provided functions.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details including code, decorators, APIs, analysis, and implementations.
+ * @returns {Array} - The generated prompt messages for reviewing the implementation.
+ */
 async function promptImplementReview({ context, data }) {
 	const { task } = data;
 	const { brd } = pm;
@@ -269,6 +291,13 @@ async function promptImplementReview({ context, data }) {
 	return [];
 }
 
+/**
+ * Augments the backend server code by implementing functions that require external APIs.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the task details including code and decorators.
+ * @returns {Object} - The generated server code with implemented functions, dependencies, and environment variables.
+ */
 async function swarmAugmentBackendExternalapis({ context, data }) {
 	/*
 	 */

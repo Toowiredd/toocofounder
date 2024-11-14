@@ -2,6 +2,13 @@ import utils from "@/utils/index.js";
 import yaml from "yaml";
 import { merge, fromPairs } from "lodash-es";
 
+/**
+ * Splits an array into smaller chunks of a specified size.
+ * 
+ * @param {Array} input_list - The array to be split into chunks.
+ * @param {number} chunk_size - The size of each chunk.
+ * @returns {Array} - An array of chunks.
+ */
 function _chunkify(input_list, chunk_size) {
 	const chunks = [];
 	for (let i = 0; i < input_list.length; i += chunk_size) {
@@ -10,6 +17,13 @@ function _chunkify(input_list, chunk_size) {
 	return chunks;
 }
 
+/**
+ * Generates the structure of the UX data map for the app, including routes, slugs, params, and views.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the product management documents and backend requirements.
+ * @returns {Object} - The generated UX data map structure.
+ */
 async function uxDatamapStructure({ context, data }) {
 	/* ;; UX:DATAMAP::ROOT:VIEWS
 		{...} -> app {routes, slugs, params , views } ; yaml
@@ -192,6 +206,13 @@ ${uxdmd}
 	};
 }
 
+/**
+ * Generates the detailed architecture for the views and sections of the UX data map.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the UX data map and UX sitemap.
+ * @returns {Object} - The generated UX data map with detailed views and sections.
+ */
 async function uxDatamapViews({ context, data }) {
 	/* ;; UX:DATAMAP::VIEWS:SECTIONS
 		{ ... } -> sections details with props & schemas ; yaml
@@ -285,6 +306,13 @@ async function uxDatamapViews({ context, data }) {
 	};
 }
 
+/**
+ * Processes a chunk of views and sections for the UX data map, detailing their data architecture.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the UX data map, backend requirements, and task details.
+ * @returns {Object} - The processed views with detailed data architecture.
+ */
 async function uxDatamapViewsChunk({ context, data }) {
 	/* ;; UX:DATAMAP::VIEWS:CHUNK
 		chunk processor for views+sections detailing

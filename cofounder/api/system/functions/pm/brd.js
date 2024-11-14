@@ -1,6 +1,13 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
 
+/**
+ * Analyzes the provided product management documents and generates a Backend Requirements Document (BRD).
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the product management documents and database requirements.
+ * @returns {Object} - The generated BRD and backend requirements.
+ */
 async function pmBrdAnalysis({ context, data }) {
 	const { pm, db } = data;
 	const { details, prd, frd, drd } = pm;
