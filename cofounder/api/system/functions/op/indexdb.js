@@ -3,6 +3,13 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
+/**
+ * Queries the vector database for relevant results based on the provided text or vector.
+ * 
+ * @param {Object} context - The context object containing project and other details.
+ * @param {Object} data - The data object containing the query parameters (text, vector, amount).
+ * @returns {Object} - The query results from the vector database.
+ */
 async function opIndexdbQuery({ context, data }) {
 	/* ;; op:INDEXDB::QUERY
     query from vector db ; currently one local index, later more indices, from url
@@ -76,6 +83,7 @@ async function opIndexdbQuery({ context, data }) {
 	}
 	return { results: [] };
 }
+
 export default {
 	"op:INDEXDB::QUERY": opIndexdbQuery,
 };
