@@ -1,5 +1,10 @@
 import utils from "@/utils/index.js";
 import dotenv from "dotenv";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import * as t from "@babel/types";
+import * as estraverse from "estraverse";
 dotenv.config();
 
 /**
@@ -243,6 +248,48 @@ Deleuze's philosophy encourages us to think beyond binary oppositions and embrac
 		usage: {},
 	};
 }
+
+
+async function replaceExternalApiCallsWithLocalModels(filePath) {
+	const code = fs.readFileSync(filePath, "utf-8");
+	const ast = parse(code, { sourceType: "module", plugins: ["jsx"] });
+
+	traverse(ast, {
+		CallExpression(path) {
+			const { callee } = path.node;
+			if (t.isMemberExpression(callee) && t.isIdentifier(callee.object)) {
+				const objectName = callee.object.name;
+				if (objectName === "utils" && callee.property.name === "openai") {
+					// Replace OpenAI API call with local model integration
+					const localModelCall = t.callExpression(
+						t.memberExpression(t.identifier("localModels"), t.identifier("inference")),
+						path.node.arguments
+					);
+					path.replaceWith(localModelCall);
+				}
+			}
+		},
+	});
+
+	const output = generate(ast, {}, code);
+	fs.writeFileSync(filePath, output.code, "utf-8");
+}
+
+async function processFiles() {
+	const files = [
+		"cofounder/api/server.js",
+		"cofounder/api/build.js",
+		"cofounder/api/system/functions/op/llm.js",
+		"cofounder/api/system/functions/backend/server.js",
+		"cofounder/api/system/functions/designer/layoutv1.js",
+	];
+
+	for (const file of files) {
+		await replaceExternalApiCallsWithLocalModels(file);
+	}
+}
+
+processFiles();
 
 export default {
 	"op:LLM::GEN": opLlmGen,
