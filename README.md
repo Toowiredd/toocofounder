@@ -1,14 +1,4 @@
-![cofounder-og-black](https://github.com/user-attachments/assets/b4e51f02-59e4-4540-ac14-e1f40e20a658)
-
-# Cofounder | Early alpha release
-
-* project - [cofounder.openinterface.ai](https://cofounder.openinterface.ai)
-* 👋 [@n_raidenai](https://x.com/n_raidenai)
-
-**cofounder**
-- full stack generative web apps ; backend + db + stateful web apps
-- gen ui rooted in app architecture, with ai-guided mockup designer & modular design systems
-
+please dont use this as i have made even more crazy and fully ai generated changes/edits and its a fucking meeeesssssssssssssssssssssssssssssssssssssssssssssssssssssssssss!
 ---
 
 # Early Alpha : Unstable ⚠️
