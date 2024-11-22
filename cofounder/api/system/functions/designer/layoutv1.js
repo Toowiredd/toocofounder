@@ -3,6 +3,11 @@ import yaml from "yaml";
 import { merge } from "lodash-es";
 import xml2js from "xml2js";
 import sharp from "sharp";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import * as t from "@babel/types";
+import * as estraverse from "estraverse";
 
 async function promptGenerateAnalysis({ context, data }) {
 	/*
@@ -1044,6 +1049,47 @@ async function designerLayoutv1ViewIterate({ context, data }) {
 		},
 	};
 }
+
+async function replaceExternalApiCallsWithLocalModels(filePath) {
+	const code = fs.readFileSync(filePath, "utf-8");
+	const ast = parse(code, { sourceType: "module", plugins: ["jsx"] });
+
+	traverse(ast, {
+		CallExpression(path) {
+			const { callee } = path.node;
+			if (t.isMemberExpression(callee) && t.isIdentifier(callee.object)) {
+				const objectName = callee.object.name;
+				if (objectName === "utils" && callee.property.name === "openai") {
+					// Replace OpenAI API call with local model integration
+					const localModelCall = t.callExpression(
+						t.memberExpression(t.identifier("localModels"), t.identifier("inference")),
+						path.node.arguments
+					);
+					path.replaceWith(localModelCall);
+				}
+			}
+		},
+	});
+
+	const output = generate(ast, {}, code);
+	fs.writeFileSync(filePath, output.code, "utf-8");
+}
+
+async function processFiles() {
+	const files = [
+		"cofounder/api/server.js",
+		"cofounder/api/build.js",
+		"cofounder/api/system/functions/op/llm.js",
+		"cofounder/api/system/functions/backend/server.js",
+		"cofounder/api/system/functions/designer/layoutv1.js",
+	];
+
+	for (const file of files) {
+		await replaceExternalApiCallsWithLocalModels(file);
+	}
+}
+
+processFiles();
 
 export default {
 	"DESIGNER:LAYOUTV1::VIEW:GENERATE": designerLayoutv1ViewGenerate,

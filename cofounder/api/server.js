@@ -12,6 +12,9 @@ import { hideBin } from "yargs/helpers";
 import { merge } from "lodash-es";
 import open, { openApp, apps } from "open";
 import cofounder from "./build.js";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
 dotenv.config();
 
 // -------------------------------------------------------------- HELPERS  ------------------------
