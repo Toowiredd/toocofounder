@@ -1,4 +1,3 @@
-
 ![cofounder-og-black](https://github.com/user-attachments/assets/b4e51f02-59e4-4540-ac14-e1f40e20a658)
 
 # Cofounder | Early alpha release
@@ -219,3 +218,9 @@ archi/v1 is as follows :
   * figma core
   * shadcn
 - Dashboard node-based ui powered by [react flow](https://reactflow.dev/)
+
+---
+
+# Commands
+
+For detailed command usage, please refer to the [COMMANDS.md](COMMANDS.md) file.
