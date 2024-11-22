@@ -15,6 +15,7 @@ import generate from "@babel/generator";
 import * as babel from "@babel/core";
 import * as t from "@babel/types";
 import * as estraverse from "estraverse";
+import localModels from "./localModels"; // Import local model wrappers
 
 const functionsDir = `./system/functions`;
 const unitsDir = `./system/structure`;
