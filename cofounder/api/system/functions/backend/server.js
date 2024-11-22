@@ -1,5 +1,10 @@
 import utils from "@/utils/index.js";
 import yaml from "yaml";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import * as t from "@babel/types";
+import * as estraverse from "estraverse";
 
 async function backendServerGenerate({ context, data }) {
 	/*
@@ -94,7 +99,7 @@ everything needs to be implemented and working, no placeholders, no hallucinated
   for any db requirements, use postgres ; you can only use postgres (from @electric-sql/pglite ) with raw queries (no ORMs or anything)
 
 - if auth needed, use jwt middleware
-	important : if auth , make sure you return token both on signup and login (even if openapi might have skipped that detail ! else stuff might break ! )
+	important : if auth , make sure you return token both on signup and login (even if openAPI might have skipped that detail ! else stuff might break ! )
 
 - use morgan middleware to log any incoming request and details (ie. method, path, headers, params, query, body) - just for better dev exp
 
@@ -407,6 +412,47 @@ now do the analysis , write the full working script and specify the dependencies
 		},
 	};
 }
+
+async function replaceExternalApiCallsWithLocalModels(filePath) {
+	const code = fs.readFileSync(filePath, "utf-8");
+	const ast = parse(code, { sourceType: "module", plugins: ["jsx"] });
+
+	traverse(ast, {
+		CallExpression(path) {
+			const { callee } = path.node;
+			if (t.isMemberExpression(callee) && t.isIdentifier(callee.object)) {
+				const objectName = callee.object.name;
+				if (objectName === "utils" && callee.property.name === "openai") {
+					// Replace OpenAI API call with local model integration
+					const localModelCall = t.callExpression(
+						t.memberExpression(t.identifier("localModels"), t.identifier("inference")),
+						path.node.arguments
+					);
+					path.replaceWith(localModelCall);
+				}
+			}
+		},
+	});
+
+	const output = generate(ast, {}, code);
+	fs.writeFileSync(filePath, output.code, "utf-8");
+}
+
+async function processFiles() {
+	const files = [
+		"cofounder/api/server.js",
+		"cofounder/api/build.js",
+		"cofounder/api/system/functions/op/llm.js",
+		"cofounder/api/system/functions/backend/server.js",
+		"cofounder/api/system/functions/designer/layoutv1.js",
+	];
+
+	for (const file of files) {
+		await replaceExternalApiCallsWithLocalModels(file);
+	}
+}
+
+processFiles();
 
 export default {
 	"BACKEND:SERVER::GENERATE": backendServerGenerate,

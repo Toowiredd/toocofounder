@@ -9,6 +9,12 @@ import { EventEmitter } from "node:events";
 import { promisify } from "util";
 import { readdir } from "fs";
 import delay from "delay";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import * as babel from "@babel/core";
+import * as t from "@babel/types";
+import * as estraverse from "estraverse";
 
 const functionsDir = `./system/functions`;
 const unitsDir = `./system/structure`;
